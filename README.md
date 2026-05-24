@@ -1,53 +1,34 @@
-# vibeic.ai
+# vibeic.github.io
 
-Static landing page for [vibeic/vibe-ic](https://github.com/vibeic/vibe-ic),
-served at <https://vibeic.ai>.
+Redirect-only site. Visitors hitting `https://vibeic.github.io/` are
+sent to `https://vibeic.ai/`.
 
-## Stack
+The real Vibe-IC landing page lives at <https://vibeic.ai> and is
+served from a separate repo (`vibeic/vibeic.ai`).
 
-Zero framework. Plain HTML + CSS + one inline SVG favicon. Built so that
-maintenance is trivial and load is instant.
+## Why this exists
 
-```
-.
-├── index.html       Main page
-├── styles.css       All styling
-├── CNAME            vibeic.ai (GitHub Pages custom domain)
-├── .nojekyll        Skip Jekyll processing
-└── README.md        This file
-```
+`vibeic.github.io` is the GitHub-side fallback URL for the `vibeic`
+org. We keep it as a 5-line meta-refresh redirect so:
 
-## Local preview
+- Anyone who guesses the GitHub URL still reaches the project.
+- The org's Pages slot is occupied (prevents accidental misuse).
+- Zero overlap with the real site at `vibeic.ai`.
 
-```bash
-python3 -m http.server 8000
-# open http://localhost:8000
-```
+## How the redirect works
 
-## Hosting
+`index.html` does three things in order:
 
-GitHub Pages serves the contents of `main` at the URL declared in
-`CNAME` (vibeic.ai). DNS:
+1. `<script>window.location.replace(...)</script>` — instant redirect,
+   no history pollution. Works in every modern browser.
+2. `<meta http-equiv="refresh">` — fallback for JavaScript-disabled clients.
+3. Visible `<a>` link — fallback for both above failing.
 
-```
-A      vibeic.ai      185.199.108.153
-A      vibeic.ai      185.199.109.153
-A      vibeic.ai      185.199.110.153
-A      vibeic.ai      185.199.111.153
-CNAME  www            vibeic.github.io
-```
-
-Enable Pages in repo Settings → Pages → Source: `main`, Custom domain:
-`vibeic.ai`, enforce HTTPS.
+`<meta name="robots" content="noindex">` keeps search engines from
+indexing this URL — only `vibeic.ai` should appear in SERPs.
+`<link rel="canonical">` reinforces the same.
 
 ## Update policy
 
-This site exists only to introduce Vibe-IC and link to the GitHub
-repos. Avoid duplicating documentation that lives in
-`vibeic/vibe-ic/README.md` — keep this page short, link out for detail.
-
-## License
-
-Site content: CC-BY-4.0. Code snippets within the page reference the
-upstream [vibe-ic](https://github.com/vibeic/vibe-ic) repository which
-is licensed under Apache-2.0.
+Don't add features here. If you want to change the landing page, do it
+in `vibeic/vibeic.ai`. This repo should stay at one HTML file.
